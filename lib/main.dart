@@ -34,41 +34,41 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   int epoch = DateTime.now().millisecondsSinceEpoch ~/ 1000;
   final int interval = 15 * 60; //15 min
-  int funds = 4000000;
+  int funds = 40;
   // how many crystals to buy / sell at a time
   int amount = 1;
   final List<CrystalType> crystalTypes = [
     CrystalType(
       name: 'Crimson Crystal',
       price: 0,
-      predictability: 5,
-      max: 800,
-      mid: 80,
-      min: 40,
+      predictability: 4.5,
+      max: 35,
+      mid: 6,
+      min: 1,
     ),
     CrystalType(
       name: 'Aether Crystal',
       price: 0,
-      predictability: 5,
-      max: 1000,
-      mid: 100,
-      min: 10,
+      predictability: 4,
+      max: 50,
+      mid: 14,
+      min: 1,
     ),
     CrystalType(
       name: 'Azure Crystal',
       price: 0,
-      predictability: 7,
-      max: 1400,
-      mid: 120,
+      predictability: 2.6,
+      max: 60,
+      mid: 11,
       min: 4,
     ),
     CrystalType(
       name: 'Demon Crystal',
       price: 0,
-      predictability: 3.5,
-      max: 3500,
-      mid: 250,
-      min: 200,
+      predictability: 3,
+      max: 95,
+      mid: 30,
+      min: 4,
     ),
   ];
   List<CrystalType> activeCrystalTypes = [];
@@ -280,14 +280,15 @@ class _AppState extends State<App> {
                   Spacer(),
                   AppText(
                       'Next day in $minsLeft:${secondsFormatter.format(secondsLeft)}'),
-                  // AppButton(
-                  //   child: AppText('Cycle Day'),
-                  //   onPressed: () {
-                  //     setState(() => poop = poop! + 1);
-                  //     cyclePrices();
-                  //     return;
-                  //   },
-                  // ),
+                  if (poop != null)
+                    AppButton(
+                      child: AppText('Cycle Day'),
+                      onPressed: () {
+                        setState(() => poop = poop! + 1);
+                        cyclePrices();
+                        return;
+                      },
+                    ),
                 ],
               ),
             ],
