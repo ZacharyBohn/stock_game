@@ -33,7 +33,15 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   int epoch = DateTime.now().millisecondsSinceEpoch ~/ 1000;
-  final int interval = 15 * 60; //15 min
+
+  final int interval = 2 * 60;
+  final int offsetEpoch = (1648003106) ~/ (2 * 60);
+
+  int? poop = null;
+  int get day => poop ?? (epoch ~/ interval) - offsetEpoch;
+  int get secondsLeft => 59 - ((epoch % interval) % 60);
+  int get minsLeft => ((interval ~/ 60) - 1) - ((epoch % interval) ~/ 60);
+
   int funds = 40;
   // how many crystals to buy / sell at a time
   int amount = 1;
@@ -74,11 +82,6 @@ class _AppState extends State<App> {
   List<CrystalType> activeCrystalTypes = [];
   // crystal: amount owned
   Map<CrystalType, int> wallet = {};
-
-  int? poop = null;
-  int get day => poop ?? (epoch ~/ interval) - 1831085;
-  int get secondsLeft => 60 - ((epoch % interval) % 60);
-  int get minsLeft => (interval ~/ 60) - ((epoch % interval) ~/ 60);
 
   var secondsFormatter = NumberFormat('00');
 
