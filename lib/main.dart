@@ -78,7 +78,7 @@ class _AppState extends State<App> {
   int? poop = null;
   int get day => poop ?? (epoch ~/ interval) - 1831085;
   int get secondsLeft => 60 - ((epoch % interval) % 60);
-  int get minsLeft => (epoch % interval) ~/ 60;
+  int get minsLeft => (interval ~/ 60) - ((epoch % interval) ~/ 60);
 
   var secondsFormatter = NumberFormat('00');
 
