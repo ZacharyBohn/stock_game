@@ -1,12 +1,14 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
-// import 'package:stock_game/database.dart';
+import 'package:stock_game/database.dart';
 
 void main() async {
-  // await Database.init();
+  await Database.init();
   runApp(const Root());
   return;
 }
@@ -30,43 +32,55 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  int day = 1;
-  int funds = 20;
+  int epoch = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+  final int interval = 15 * 60; //15 min
+  int funds = 4000;
   // how many crystals to buy / sell at a time
   int amount = 1;
   final List<CrystalType> crystalTypes = [
     CrystalType(
       name: 'Crimson Crystal',
-      price: 10,
-      softMin: 16,
-      softMax: 80,
-      spread: 15,
+      price: 0,
+      predictability: 5,
+      max: 800,
+      mid: 80,
+      min: 40,
     ),
     CrystalType(
       name: 'Aether Crystal',
-      price: 11,
-      softMin: 18,
-      softMax: 170,
-      spread: 3,
+      price: 0,
+      predictability: 5,
+      max: 1000,
+      mid: 100,
+      min: 10,
     ),
     CrystalType(
       name: 'Azure Crystal',
-      price: 12,
-      softMin: 20,
-      softMax: 290,
-      spread: 8,
+      price: 0,
+      predictability: 7,
+      max: 1400,
+      mid: 120,
+      min: 4,
     ),
     CrystalType(
       name: 'Demon Crystal',
-      price: 50,
-      softMin: 40,
-      softMax: 900,
-      spread: 25,
+      price: 0,
+      predictability: 3.5,
+      max: 3500,
+      mid: 250,
+      min: 200,
     ),
   ];
   List<CrystalType> activeCrystalTypes = [];
   // crystal: amount owned
   Map<CrystalType, int> wallet = {};
+
+  int? poop = null;
+  int get day => poop ?? (epoch ~/ interval) - 1831085;
+  int get secondsLeft => 60 - ((epoch % interval) % 60);
+  int get minsLeft => (epoch % interval) ~/ 60;
+
+  var secondsFormatter = NumberFormat('00');
 
   @override
   initState() {
@@ -74,17 +88,33 @@ class _AppState extends State<App> {
       activeCrystalTypes.add(crystal);
       wallet[crystal] = 0;
     }
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      var prevDay = day;
+      epoch = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+      if (day != prevDay) {
+        cyclePrices();
+      }
+      setState(() {
+        epoch = epoch;
+      });
+    });
+    var tempFunds = Database.get('funds');
+    if (tempFunds != null) funds = tempFunds;
+    for (var crystal in crystalTypes) {
+      var tempFunds = Database.get('wallet.${crystal.name}');
+      if (tempFunds != null) wallet[crystal] = tempFunds;
+    }
+    cyclePrices();
     super.initState();
     return;
   }
 
-  void nextDay() {
+  void cyclePrices() {
     for (var crystal in activeCrystalTypes) {
-      crystal.randomizePrice(Random().nextInt(2) - 1);
+      crystal.randomizePrice(day);
     }
     setState(() {
       activeCrystalTypes = activeCrystalTypes;
-      day += 1;
     });
     return;
   }
@@ -100,6 +130,38 @@ class _AppState extends State<App> {
   String formatInt(int value) {
     NumberFormat formatter = NumberFormat.compact();
     return formatter.format(value);
+  }
+
+  void buyCrystals(CrystalType crystal) {
+    int? newFunds = crystal.tryToBuy(funds: funds, amount: amount);
+    if (newFunds != null) {
+      setState(() {
+        funds = newFunds;
+        wallet[crystal] = wallet[crystal]! + amount;
+      });
+    }
+    saveToDb();
+    return;
+  }
+
+  void sellCrystals(CrystalType crystal) {
+    if (wallet[crystal]! >= amount) {
+      setState(() {
+        funds += crystal.price * amount;
+        wallet[crystal] = wallet[crystal]! - amount;
+      });
+    }
+    saveToDb();
+    return;
+  }
+
+  void saveToDb() {
+    Database.insert(funds, 'funds');
+    Database.insert(wallet, 'wallet');
+    for (var crystal in crystalTypes) {
+      Database.insert(wallet[crystal], 'wallet.${crystal.name}');
+    }
+    return;
   }
 
   @override
@@ -154,26 +216,14 @@ class _AppState extends State<App> {
                     AppButton(
                         child: AppText('Buy'),
                         onPressed: () {
-                          int? newFunds =
-                              crystal.tryToBuy(funds: funds, amount: amount);
-                          if (newFunds != null) {
-                            setState(() {
-                              funds = newFunds;
-                              wallet[crystal] = wallet[crystal]! + amount;
-                            });
-                          }
+                          buyCrystals(crystal);
                           return;
                         }),
                     SizedBox(width: 14),
                     AppButton(
                         child: AppText('Sell'),
                         onPressed: () {
-                          if (wallet[crystal]! >= amount) {
-                            setState(() {
-                              funds += crystal.price * amount;
-                              wallet[crystal] = wallet[crystal]! - amount;
-                            });
-                          }
+                          sellCrystals(crystal);
                           return;
                         }),
                   ],
@@ -228,13 +278,16 @@ class _AppState extends State<App> {
                 children: [
                   AppText('Day ${formatInt(day)}'),
                   Spacer(),
-                  AppButton(
-                    child: AppText('Cycle Day'),
-                    onPressed: () {
-                      nextDay();
-                      return;
-                    },
-                  ),
+                  AppText(
+                      'Next day in $minsLeft:${secondsFormatter.format(secondsLeft)}'),
+                  // AppButton(
+                  //   child: AppText('Cycle Day'),
+                  //   onPressed: () {
+                  //     setState(() => poop = poop! + 1);
+                  //     cyclePrices();
+                  //     return;
+                  //   },
+                  // ),
                 ],
               ),
             ],
@@ -245,20 +298,31 @@ class _AppState extends State<App> {
   }
 }
 
+@HiveType(typeId: 0)
 class CrystalType {
   CrystalType({
     required this.name,
     required this.price,
-    required this.softMin,
-    required this.softMax,
-    required this.spread,
-  }) : direction = Random().nextInt(4) - 2;
+    required this.predictability,
+    required this.max,
+    required this.mid,
+    required this.min,
+  });
+  @HiveField(0)
   String name;
-  int direction;
+  @HiveField(1)
   int price;
-  int softMin;
-  int softMax;
-  int spread;
+  // lower = more predictable
+  // 1 - 10
+  // @HiveField(0)
+  double predictability;
+  @HiveField(2)
+  int max;
+  @HiveField(3)
+  int mid;
+  @HiveField(4)
+  int min;
+  @HiveField(5)
   bool? goingUp;
 
   int? tryToBuy({required int funds, required int amount}) {
@@ -267,20 +331,21 @@ class CrystalType {
     return funds - totalPrice;
   }
 
-  void randomizePrice(int adjustment) {
+  int _getPseudoPrice(int x) {
+    double y = x / predictability;
+    double cursor0 = _pseudo(y);
+    double cursor1 = _pseudo(y + 1);
+    double cursor2 = _pseudo(y + 2);
+    return ((cursor0 * max) + (cursor1 * mid) + (cursor2 * min)).toInt();
+  }
+
+  double _pseudo(double x) {
+    return (sin(x * 2) + sin(x * 3) + 2) / 4;
+  }
+
+  void randomizePrice(int day) {
     int previous = price;
-    if (Random().nextInt(3) == 0) {
-      direction += (Random().nextInt(4) - 2);
-      if (direction < -4) direction = -4;
-      if (direction > 4) direction = 4;
-    }
-    int hardMin = 1;
-    int localSpread = Random().nextInt(spread) + 4;
-    price = price + Random().nextInt(localSpread) - (localSpread ~/ 2);
-    price += direction;
-    if (price < hardMin) price = 1;
-    if (price < softMin) direction += 1;
-    if (price > softMax) price -= 2;
+    price = _getPseudoPrice(day);
     goingUp = null;
     if (price > previous) goingUp = true;
     if (price < previous) goingUp = false;
