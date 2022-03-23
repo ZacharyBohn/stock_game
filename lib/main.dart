@@ -34,7 +34,7 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   int epoch = DateTime.now().millisecondsSinceEpoch ~/ 1000;
   final int interval = 15 * 60; //15 min
-  int funds = 4000;
+  int funds = 4000000;
   // how many crystals to buy / sell at a time
   int amount = 1;
   final List<CrystalType> crystalTypes = [
@@ -128,7 +128,7 @@ class _AppState extends State<App> {
   }
 
   String formatInt(int value) {
-    NumberFormat formatter = NumberFormat.compact();
+    NumberFormat formatter = NumberFormat('###,###,###,###,###');
     return formatter.format(value);
   }
 
