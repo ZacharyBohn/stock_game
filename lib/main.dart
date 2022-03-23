@@ -201,12 +201,12 @@ class _AppState extends State<App> {
                   children: [
                     AppText('Price: ${formatInt(crystal.price)} g'),
                     SizedBox(width: 14),
-                    crystal.goingUp == true
+                    crystal.goingUp(day) == true
                         ? Icon(
                             Icons.arrow_upward_rounded,
                             color: Colors.green,
                           )
-                        : crystal.goingUp == false
+                        : crystal.goingUp(day) == false
                             ? Icon(
                                 Icons.arrow_downward_rounded,
                                 color: Colors.red,
@@ -324,7 +324,13 @@ class CrystalType {
   @HiveField(4)
   int min;
   @HiveField(5)
-  bool? goingUp;
+  bool? goingUp(int day) {
+    int prevPrice = _getPseudoPrice(day - 1);
+    int price = _getPseudoPrice(day);
+    if (price > prevPrice) return true;
+    if (price < prevPrice) return false;
+    return null;
+  }
 
   int? tryToBuy({required int funds, required int amount}) {
     int totalPrice = price * amount;
@@ -345,11 +351,7 @@ class CrystalType {
   }
 
   void randomizePrice(int day) {
-    int previous = price;
     price = _getPseudoPrice(day);
-    goingUp = null;
-    if (price > previous) goingUp = true;
-    if (price < previous) goingUp = false;
     return;
   }
 }
