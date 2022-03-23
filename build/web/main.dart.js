@@ -14955,13 +14955,13 @@ Ab:function Ab(a){this.a=a},
 oq:function oq(a){this.a=a},
 BV:function BV(a,b,c,d,e,f){var _=this
 _.d=a
-_.f=40
-_.r=1
-_.x=b
-_.y=c
-_.z=d
-_.Q=null
-_.ch=e
+_.r=null
+_.x=40
+_.y=1
+_.z=b
+_.Q=c
+_.ch=d
+_.cx=e
 _.a=null
 _.b=f
 _.c=null},
@@ -47699,14 +47699,14 @@ A.oq.prototype={
 aL(){var s=t.E9
 return new A.BV(B.e.aE(Date.now(),1000),A.a([new A.ii("Crimson Crystal",0,4.5,35,6,1),new A.ii("Aether Crystal",0,4,50,14,1),new A.ii("Azure Crystal",0,2.6,60,11,4),new A.ii("Demon Crystal",0,3,95,30,4)],s),A.a([],s),A.v(t.a3,t.S),A.yM("00"),B.o)}}
 A.BV.prototype={
-grR(){var s=B.e.aE(this.d,900)
-return s-1831085},
+grR(){var s=B.e.aE(this.d,120)
+return s-13733359},
 bk(){var s,r,q,p,o,n,m,l=this
-for(s=l.x,r=B.b.aK(s,0,4),q=r.length,p=l.z,o=0;o<r.length;r.length===q||(0,A.A)(r),++o){n=r[o]
-l.y.push(n)
+for(s=l.z,r=B.b.aK(s,0,4),q=r.length,p=l.ch,o=0;o<r.length;r.length===q||(0,A.A)(r),++o){n=r[o]
+l.Q.push(n)
 p.m(0,n,0)}A.a4z(A.cg(0,0,1),new A.U6(l))
 m=A.ac4("funds")
-if(m!=null)l.f=m
+if(m!=null)l.x=m
 for(o=0;o<4;++o){n=s[o]
 r="wallet."+n.a
 q=$.wJ
@@ -47715,49 +47715,49 @@ if(m!=null)p.m(0,n,m)}l.Ao()
 l.bM()
 return},
 Ao(){var s,r,q,p,o,n=this
-for(s=n.y,r=s.length,q=0;q<s.length;s.length===r||(0,A.A)(s),++q){p=s[q]
-o=B.e.aE(n.d,900)
-p.b=p.qr(o-1831085)}n.ax(new A.U4(n))
+for(s=n.Q,r=s.length,q=0;q<s.length;s.length===r||(0,A.A)(s),++q){p=s[q]
+o=B.e.aE(n.d,120)
+p.b=p.qr(o-13733359)}n.ax(new A.U4(n))
 return},
 Dq(){var s,r,q,p,o,n
-for(s=this.y,r=s.length,q=this.z,p=0,o=0;o<s.length;s.length===r||(0,A.A)(s),++o){n=q.i(0,s[o])
+for(s=this.Q,r=s.length,q=this.ch,p=0,o=0;o<s.length;s.length===r||(0,A.A)(s),++o){n=q.i(0,s[o])
 n.toString
 p+=n}return p},
-PG(a){var s=this,r=s.f,q=a.Uc(s.r,r)
+PG(a){var s=this,r=s.x,q=a.Uc(s.y,r)
 if(q!=null)s.ax(new A.U3(s,q,a))
 s.va()
 return},
-Dz(a){var s=this,r=s.z.i(0,a)
+Dz(a){var s=this,r=s.ch.i(0,a)
 r.toString
-if(r>=s.r)s.ax(new A.U7(s,a))
+if(r>=s.y)s.ax(new A.U7(s,a))
 s.va()
 return},
 va(){var s,r,q,p
-A.a_2(this.f,"funds")
-s=this.z
+A.a_2(this.x,"funds")
+s=this.ch
 A.a_2(s,"wallet")
-for(r=this.x,q=0;q<4;++q){p=r[q]
+for(r=this.z,q=0;q<4;++q){p=r[q]
 A.a_2(s.i(0,p),"wallet."+p.a)}return},
-M(a,b){var s,r,q,p,o,n,m,l=this,k=null,j="###,###,###,###,###",i=A.en(k,8,k),h=l.f,g=t.E
+M(a,b){var s,r,q,p,o,n,m,l=this,k=null,j="###,###,###,###,###",i=A.en(k,8,k),h=l.x,g=t.E
 h=A.a([i,A.Ai(A.a([new A.dq("Funds: "+A.yM(j).la(0,h)+" g",!1,k),new A.iZ(k),new A.dq("Total Crystals Owned: "+l.Dq(),!1,k)],g),B.aV),A.en(k,8,k),new A.lh(k),A.en(k,8,k)],g)
-for(i=l.y,s=i.length,r=l.z,q=0;q<i.length;i.length===s||(0,A.A)(i),++q){p=i[q]
+for(i=l.Q,s=i.length,r=l.ch,q=0;q<i.length;i.length===s||(0,A.A)(i),++q){p=i[q]
 o=p.a+" ("+A.d(r.i(0,p))+")"
 n=p.b
 n="Price: "+A.yM(j).la(0,n)+" g"
-m=B.e.aE(l.d,900)
-if(p.v5(m-1831085)===!0)m=new A.lW(B.x1,B.AZ,k)
-else{m=B.e.aE(l.d,900)
-m=p.v5(m-1831085)===!1?new A.lW(B.x0,B.B_,k):A.Je(k,k,k,k,k,k,k,k)}B.b.E(h,A.a([new A.fK(k,8,k,k),new A.jp(B.ro,k,k,new A.dq(o,!0,k),k),new A.fK(k,8,k,k),A.Ai(A.a([new A.dq(n,!1,k),new A.fK(14,k,k,k),m,new A.iZ(k),new A.js(new A.dq("Buy",!1,k),new A.U_(l,p),k),new A.fK(14,k,k,k),new A.js(new A.dq("Sell",!1,k),new A.U0(l,p),k)],g),B.aV),new A.fK(k,14,k,k)],g))}h.push(A.en(k,8,k))
+m=B.e.aE(l.d,120)
+if(p.v5(m-13733359)===!0)m=new A.lW(B.x1,B.AZ,k)
+else{m=B.e.aE(l.d,120)
+m=p.v5(m-13733359)===!1?new A.lW(B.x0,B.B_,k):A.Je(k,k,k,k,k,k,k,k)}B.b.E(h,A.a([new A.fK(k,8,k,k),new A.jp(B.ro,k,k,new A.dq(o,!0,k),k),new A.fK(k,8,k,k),A.Ai(A.a([new A.dq(n,!1,k),new A.fK(14,k,k,k),m,new A.iZ(k),new A.js(new A.dq("Buy",!1,k),new A.U_(l,p),k),new A.fK(14,k,k,k),new A.js(new A.dq("Sell",!1,k),new A.U0(l,p),k)],g),B.aV),new A.fK(k,14,k,k)],g))}h.push(A.en(k,8,k))
 h.push(new A.lh(k))
 h.push(A.en(k,8,k))
-i=l.r
+i=l.y
 h.push(A.Ai(A.a([new A.dq("Crystals per sell: "+A.yM(j).la(0,i),!1,k),new A.iZ(k),new A.js(new A.dq("-",!1,k),new A.U1(l),k),A.en(k,k,8),new A.js(new A.dq("+",!1,k),new A.U2(l),k)],g),B.aV))
 h.push(A.en(k,8,k))
 h.push(new A.lh(k))
 h.push(A.en(k,8,k))
 h.push(new A.iZ(k))
 i=l.grR()
-g=A.a([new A.dq("Day "+A.yM(j).la(0,i),!1,k),new A.iZ(k),new A.dq("Next day in "+B.e.aE(B.e.c6(l.d,900),60)+":"+l.ch.la(0,60-B.e.c6(B.e.c6(l.d,900),60)),!1,k)],g)
+g=A.a([new A.dq("Day "+A.yM(j).la(0,i),!1,k),new A.iZ(k),new A.dq("Next day in "+(1-B.e.aE(B.e.c6(l.d,120),60))+":"+l.cx.la(0,59-B.e.c6(B.e.c6(l.d,120),60)),!1,k)],g)
 h.push(A.Ai(g,B.aV))
 return A.ae9(new A.r3(new A.hv(B.wK,A.a2u(h,B.aV),k),B.p,k),!0)}}
 A.U6.prototype={
@@ -47774,20 +47774,20 @@ $0(){},
 $S:0}
 A.U3.prototype={
 $0(){var s,r,q,p=this.a
-p.f=this.b
-s=p.z
+p.x=this.b
+s=p.ch
 r=this.c
 q=s.i(0,r)
 q.toString
-s.m(0,r,q+p.r)},
+s.m(0,r,q+p.y)},
 $S:0}
 A.U7.prototype={
 $0(){var s,r,q=this.a,p=this.b
-q.f=q.f+p.b*q.r
-s=q.z
+q.x=q.x+p.b*q.y
+s=q.ch
 r=s.i(0,p)
 r.toString
-s.m(0,p,r-q.r)},
+s.m(0,p,r-q.y)},
 $S:0}
 A.U_.prototype={
 $0(){this.a.PG(this.b)
@@ -47799,20 +47799,20 @@ return},
 $S:0}
 A.U1.prototype={
 $0(){var s=this.a
-if(s.r===1)return
+if(s.y===1)return
 s.ax(new A.TZ(s))},
 $S:0}
 A.TZ.prototype={
 $0(){var s=this.a
-s.r=B.e.aE(s.r,10)},
+s.y=B.e.aE(s.y,10)},
 $S:0}
 A.U2.prototype={
 $0(){var s=this.a
-if(s.r>Math.pow(10,14))return
+if(s.y>Math.pow(10,14))return
 s.ax(new A.TY(s))},
 $S:0}
 A.TY.prototype={
-$0(){this.a.r*=10},
+$0(){this.a.y*=10},
 $S:0}
 A.ii.prototype={
 v5(a){var s=this.qr(a-1),r=this.qr(a)
